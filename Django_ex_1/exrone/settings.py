@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'exrone_app',
     'exrtwoapp',
     'cloud_message_board',
+    'response_test',
 ]
 
 MIDDLEWARE = [
