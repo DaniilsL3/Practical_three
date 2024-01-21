@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+</head>
+<body>
+    <h2>Search Messages</h2>
+    <form action="" method="get">
+        <input type="text" name="name" placeholder="Enter name">
+        <button type="submit">Search</button>
+    </form>
+
+  <h2>Messages</h2>
+    {% if request.GET.name %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>
+                    <strong>From:</strong> {{ message.sender }}<br>
+                    <strong>To:</strong> {{ message.recipient }}<br>
+                    <strong>Message:</strong> {{ message.message }}<br>
+                    <strong>At:</strong> {{ message.created_at }}
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No messages found for "{{ request.GET.name }}".</p>
+        {% endif %}
+    {% else %}
+        <p>Enter a name to search for messages.</p>
+    {% endif %}
+</body>
+</html>

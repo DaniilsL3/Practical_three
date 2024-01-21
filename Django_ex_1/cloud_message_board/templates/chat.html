@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chat</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'chat/css/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'chat/js/script.js' %}"></script>
+</head>
+<body>
+    <div id="enterNamePrompt">
+        <form method="post" id="nameForm">
+            {% csrf_token %}
+            <input type="text" name="user_name" placeholder="Enter your name">
+            <button type="submit">Enter Chat</button>
+        </form>
+    </div>
+
+    <div id="chatContainer" style="display:none;">
+        <div class="chatWindow">
+            {% for message in messages %}
+                <div class="message {% if message.sender == user_name %}sent{% else %}received{% endif %}">
+                    <strong>{{ message.sender }}</strong>: {{ message.message }}<br>
+                    <small>Sent on {{ message.created_at|date:"F d, Y H:i" }}</small>
+                </div>
+            {% empty %}
+                <p>No messages yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="messageForm">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="sender" value="{{ user_name }}">
+                <input type="text" name="recipient" placeholder="Recipient's Name" required>
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#nameForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: $(this).serialize(),
+                    success: function() {
+                        $('#enterNamePrompt').hide();
+                        $('#chatContainer').show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

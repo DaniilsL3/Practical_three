@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chat</title>
+    <!-- Add CSS links here -->
+    <link rel="stylesheet" href="{% static 'chat_app/css/style.css' %}">
+    <script src="{% static 'chat_app/js/script.js' %}"></script>
+    <script>
+    window.onload = function() {
+        var chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+    </script>
+</head>
+<body>
+<form action="{% url 'display_chat' %}" method="get">
+    <input type="text" name="username" placeholder="Enter your username">
+    <button type="submit">Enter Chat</button>
+</form>
+
+    <div id="chat-box">
+        {% for message in messages %}
+            <div class="message {% if message.sender == username %}sent{% else %}received{% endif %}">
+                <strong>{{ message.sender }}</strong> to <strong>{{ message.recipient }}</strong>: {{ message.message_text }} <em>{{ message.timestamp }}</em>
+            </div>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </div>
+
+    <form action="{% url 'process_message' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="recipient" placeholder="Recipient's Name">
+        <textarea name="message_text" placeholder="Type your message here"></textarea>
+        <button type="submit">Send Message</button>
+    </form>
+</body>
+</html>
